@@ -45,12 +45,46 @@ Claude Code のサブエージェント機能を使い、**Fable 5 / Opus / Sonn
 
 完了すると `reports/` に日付き Markdown レポートが生成される。
 
+## 日次ニュース蓄積(Supabase)
+
+`/news-research`(レポート生成)とは別に、**毎朝5時(JST)にAI全般とAI×教育の最新ニュースを自動収集し、Supabaseに蓄積する**仕組みを持つ。
+
+```
+定期トリガー(Claude Code Routines, 毎朝5:00 JST)
+│  新規クラウドセッションを起動し /daily-news-ingest を実行
+│
+├─ news-scout × 2(Sonnet 5)…… 並列収集
+│     ├ AI全般(モデル・研究・業界・規制)      → category: ai_general
+│     └ AI×教育(EdTech・導入事例・教育政策)   → category: ai_education
+│
+└─ メインセッション …… 構造化して Supabase へ INSERT
+      ├ news_items(記事。url ユニーク制約で重複自動排除)
+      └ news_runs(実行ログ)
+```
+
+- **Supabase プロジェクト**: `rsykqkjcolptspzrpucx`(ap-northeast-1)
+- **スキーマ**: `supabase/migrations/20260705_create_news_tables.sql`(適用済み)
+- **ワークフロー定義**: `.claude/commands/daily-news-ingest.md`(手動実行も可: `/daily-news-ingest`)
+- **スケジュール管理**: [claude.ai/code/routines](https://claude.ai/code/routines) から確認・変更・一時停止できる
+- 両テーブルはRLS有効・ポリシーなし(=RESTからの外部アクセス遮断)。読み書きはSupabase MCP経由
+
+蓄積データの例(直近7日の教育関連を新しい順に):
+
+```sql
+select collected_date, title, source, url, importance
+from news_items
+where category = 'ai_education' and collected_date > current_date - 7
+order by collected_date desc, importance desc;
+```
+
 ## ディレクトリ構成
 
 | パス | 用途 |
 |---|---|
 | `.claude/agents/` | サブエージェント定義(scout / analyst / fact-checker) |
 | `.claude/commands/news-research.md` | 調査ワークフローを起動するスラッシュコマンド |
+| `.claude/commands/daily-news-ingest.md` | 日次収集→Supabase蓄積ワークフロー |
+| `supabase/migrations/` | Supabaseスキーマの記録 |
 | `research/` | 収集・分析の中間成果物(調査ごとにサブディレクトリ) |
 | `reports/` | 最終レポート |
 

@@ -5,6 +5,7 @@
 ## このリポジトリでの作業ルール
 
 - ニュース調査の依頼を受けたら `/news-research <トピック>` のワークフローに従う(コマンドを使わず依頼された場合も同じ手順を踏む)
+- 日次のニュース収集・Supabase蓄積(毎朝5時の定期実行)は `/daily-news-ingest` のワークフローに従う。Supabase プロジェクトIDは `rsykqkjcolptspzrpucx`
 - **モデルの使い分けを崩さない**: 収集は `news-scout`(Sonnet)を並列起動、分析は `news-analyst`(Opus)、検証は `fact-checker`(Opus)、計画と最終レポート執筆はメインセッションが行う
 - scout は必ず同一ターンで並列起動する(直列起動は禁止)
 - 中間成果物は `research/<調査ID>/`、最終レポートは `reports/` に保存する
@@ -14,5 +15,7 @@
 
 - `.claude/agents/` — サブエージェント定義(変更時はモデル割り当ての根拠をREADMEと同期させる)
 - `.claude/commands/news-research.md` — 調査ワークフロー
+- `.claude/commands/daily-news-ingest.md` — 日次収集→Supabase蓄積ワークフロー
+- `supabase/migrations/` — Supabaseスキーマの記録(適用はMCP経由で実施済み)
 - `research/` — 中間成果物(コミット不要。ただし調査の再現性を残したい場合はコミット可)
 - `reports/` — 最終レポート(コミットする)

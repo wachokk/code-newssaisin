@@ -1,0 +1,238 @@
+<title>AIニュース朝刊</title>
+<style>
+  :root {
+    --paper: #F6F7F5;
+    --ink: #20262C;
+    --muted: #6A7480;
+    --hairline: #DCDFDA;
+    --ai: #2E6E8E;
+    --ai-soft: #E3EDF2;
+    --edu: #4E7A52;
+    --edu-soft: #E5EEE5;
+    --lead-bg: #EDF0EB;
+    --dot-off: #CBD0CA;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #13171C;
+      --ink: #E6E9EC;
+      --muted: #8B95A0;
+      --hairline: #2A313A;
+      --ai: #6FAECB;
+      --ai-soft: #1C2B34;
+      --edu: #8CB890;
+      --edu-soft: #1D2A1E;
+      --lead-bg: #1A2027;
+      --dot-off: #39414B;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #13171C;
+    --ink: #E6E9EC;
+    --muted: #8B95A0;
+    --hairline: #2A313A;
+    --ai: #6FAECB;
+    --ai-soft: #1C2B34;
+    --edu: #8CB890;
+    --edu-soft: #1D2A1E;
+    --lead-bg: #1A2027;
+    --dot-off: #39414B;
+  }
+  :root[data-theme="light"] {
+    --paper: #F6F7F5;
+    --ink: #20262C;
+    --muted: #6A7480;
+    --hairline: #DCDFDA;
+    --ai: #2E6E8E;
+    --ai-soft: #E3EDF2;
+    --edu: #4E7A52;
+    --edu-soft: #E5EEE5;
+    --lead-bg: #EDF0EB;
+    --dot-off: #CBD0CA;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic Medium", "Yu Gothic", "Noto Sans JP", sans-serif;
+    line-height: 1.75;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+  .sheet { max-width: 40rem; margin: 0 auto; padding: 1.5rem 1.25rem 4rem; }
+
+  .masthead { border-bottom: 3px double var(--ink); padding-bottom: 1rem; margin-bottom: .25rem; }
+  .masthead .date {
+    font-size: .78rem; letter-spacing: .12em; color: var(--muted);
+    font-variant-numeric: tabular-nums; margin: 0 0 .35rem;
+  }
+  .masthead h1 {
+    font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+    font-weight: 600; font-size: 1.9rem; letter-spacing: .06em; margin: 0;
+    text-wrap: balance;
+  }
+  .masthead .counts { font-size: .8rem; color: var(--muted); margin: .4rem 0 0; }
+  .masthead .counts b { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+  .lead { background: var(--lead-bg); margin: 1.25rem 0 0; padding: 1rem 1.1rem 1.1rem; }
+  .lead .eyebrow {
+    font-size: .7rem; letter-spacing: .22em; color: var(--muted);
+    text-transform: uppercase; margin: 0 0 .5rem;
+  }
+  .lead article + article { border-top: 1px solid var(--hairline); margin-top: .9rem; padding-top: .9rem; }
+  .lead h2 { font-size: 1.08rem; line-height: 1.55; margin: .2rem 0 .3rem; text-wrap: balance; }
+  .lead p.summary { margin: 0; font-size: .88rem; color: var(--ink); }
+
+  section.category { margin-top: 2.2rem; }
+  .cat-head { display: flex; align-items: baseline; gap: .6rem; border-bottom: 2px solid var(--cat, var(--ink)); padding-bottom: .4rem; }
+  .cat-head h2 { font-size: 1rem; letter-spacing: .1em; margin: 0; color: var(--cat, var(--ink)); }
+  .cat-head .n { font-size: .78rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+  section.general { --cat: var(--ai); --cat-soft: var(--ai-soft); }
+  section.education { --cat: var(--edu); --cat-soft: var(--edu-soft); }
+
+  ol.items { list-style: none; margin: 0; padding: 0; }
+  ol.items li { border-bottom: 1px solid var(--hairline); padding: .95rem 0; }
+  .meta { display: flex; align-items: center; gap: .55rem; font-size: .74rem; color: var(--muted); }
+  .meta .src { background: var(--cat-soft); color: var(--cat); padding: .05rem .5rem; letter-spacing: .02em; }
+  .meta time { font-variant-numeric: tabular-nums; letter-spacing: .05em; }
+  .dots { display: inline-flex; gap: 3px; margin-left: auto; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--dot-off); }
+  .dots i.on { background: var(--cat); }
+  h3.title { font-size: .98rem; line-height: 1.6; margin: .35rem 0 .25rem; font-weight: 600; }
+  h3.title a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--hairline); }
+  h3.title a:hover, h3.title a:focus-visible { border-bottom-color: var(--cat); color: var(--cat); }
+  a:focus-visible { outline: 2px solid var(--cat); outline-offset: 2px; }
+  p.summary { margin: 0; font-size: .85rem; color: var(--muted); }
+
+  details.note { margin-top: 2.5rem; font-size: .78rem; color: var(--muted); }
+  details.note summary { cursor: pointer; letter-spacing: .05em; }
+  details.note p { margin: .5rem 0 0; }
+  footer.colophon {
+    margin-top: 2rem; padding-top: .8rem; border-top: 3px double var(--ink);
+    font-size: .72rem; color: var(--muted); letter-spacing: .08em;
+  }
+</style>
+
+<div class="sheet">
+  <header class="masthead">
+    <p class="date">2026年7月6日(月) 5:00 JST 収集</p>
+    <h1>AIニュース朝刊</h1>
+    <p class="counts">本日 <b>19</b> 件 — AI全般 <b>8</b> ・ AI×教育 <b>11</b></p>
+  </header>
+
+  <div class="lead">
+    <p class="eyebrow">今朝の一面</p>
+    <article>
+      <h2><a href="https://www.unesco.org/en/articles/global-dialogue-ai-governance-geneva-6-7-july" style="color:inherit;text-decoration:none;">国連「AIガバナンスに関するグローバル対話」がジュネーブで開幕</a></h2>
+      <p class="summary">国連総会が設置した第1回会合が7月6〜7日に開催。193カ国に加え民間・学術界・市民社会が参加し、国際的なAI協調枠組みを議論する。同時期にITU「AI for Good」サミットも連続開催。</p>
+    </article>
+    <article>
+      <h2><a href="https://reseed.resemom.jp/article/2026/07/03/13600.html" style="color:inherit;text-decoration:none;">文部科学省、生成AIガイドラインを速やかに改訂する方針を表明</a></h2>
+      <p class="summary">6月30日のデジタル学習基盤特別委員会で、次期学習指導要領の改訂を待たずにガイドラインを改訂する方針を提示。教育情報セキュリティポリシーも2026年度中に改訂予定。</p>
+    </article>
+  </div>
+
+  <section class="category general">
+    <div class="cat-head"><h2>AI全般</h2><span class="n">8件</span></div>
+    <ol class="items">
+      <li>
+        <div class="meta"><span class="src">FAI</span><time>07-06</time><span class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+        <h3 class="title"><a href="https://www.thefai.org/posts/dean-ball-joins-openai-as-head-of-strategic-futures">OpenAI、元ホワイトハウスAI政策顧問ディーン・ボール氏を「Strategic Futures」責任者に起用</a></h3>
+        <p class="summary">米「AI Action Plan」主著者が7月6日付で入社。破局的リスクや再帰的自己改善、労働市場への影響などフロンティアAI政策を担当する。</p>
+      </li>
+      <li>
+        <div class="meta"><span class="src">AI新聞</span><time>07-05</time><span class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+        <h3 class="title"><a href="https://exawizards.com/column/ai-trend/news-07-05-2026-2/">オープンソースAIで米国が中国に迫る勢い(NVIDIA Nemotron 3 Ultra)</a></h3>
+        <p class="summary">Nemotron 3 Ultraが米国製オープンモデルとして最高水準の知能スコアを記録し、中国勢主導のオープンソースAI領域で米国が差を縮めつつあるとする分析。</p>
+      </li>
+      <li>
+        <div class="meta"><span class="src">Electrek</span><time>07-02</time><span class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+        <h3 class="title"><a href="https://electrek.co/2026/07/02/tesla-caps-employee-ai-spending-200-week/">テスラ、社員のAIツール利用に週200ドルの上限を導入(7月6日発効)</a></h3>
+        <p class="summary">Anthropic・OpenAI・Google製AIツールが対象で、超過には承認が必要。xAI(Grok)のベータ版は対象外。一部エンジニアの週数千ドル相当のトークン消費が背景。</p>
+      </li>
+      <li>
+        <div class="meta"><span class="src">Qiita(個人)</span><time>07-05</time><span class="dots"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+        <h3 class="title"><a href="https://qiita.com/lhjjjk4/items/c21ef38c7f1aace599ff">AI Daily Digest: 上半期AI投資5,100億ドル規模、Kling AI 28億ドル調達など</a></h3>
+        <p class="summary">2026年上半期の世界AIスタートアップ資金調達総額の集計と、中国Kling AIのAlibaba・Tencent主導での大型調達をまとめた個人記事。数値の算出根拠は未検証。</p>
+      </li>
+      <li>
+        <div class="meta"><span class="src">Basenor</span><time>07-05</time><span class="dots"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+        <h3 class="title"><a href="https://www.basenor.com/blogs/news/grok-imagine-is-done-xai-completes-image-generation-feature">イーロン・マスク氏、「Grok Imagine」の開発完了を表明</a></h3>
+        <p class="summary">Xでの「Done with Grok Imagine」投稿。開発フェーズを終え安定運用への移行を示唆とみられるが、「完了」の意味は解説記事側の推測を含む。</p>
+      </li>
+      <li>
+        <div class="meta"><span class="src">eguweb</span><time>07-05</time><span class="dots"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+        <h3 class="title"><a href="https://eguweb.jp/ai/81131/">世界のAI最新ニュース総括: エージェント基盤・AI規制・インフラが運用段階へ</a></h3>
+        <p class="summary">AIエージェントの業務基盤化、生成コンテンツへの来歴情報付与、EU AI Act第50条の透明性義務(8月2日施行予定)対応が同時に課題になっていると総括。</p>
+      </li>
+      <li>
+        <div class="meta"><span class="src">Google Cloud</span><time>07-05</time><span class="dots"><i class="on"></i><i></i><i></i><i></i><i></i></span></div>
+        <h3 class="title"><a href="https://docs.cloud.google.com/vertex-ai/docs/release-notes">Anthropic「Claude 3.5 Haiku」、Vertex AI上で提供終了</a></h3>
+        <p class="summary">1月に非推奨化が予告されていた旧モデルの、予定されたプラットフォーム上の提供終了。</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="category education">
+    <div class="cat-head"><h2>AI × 教育</h2><span class="n">11件</span></div>
+    <ol class="items">
+      <li>
+        <div class="meta"><span class="src">Schools Week</span><time>07-03</time><span class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+        <h3 class="title"><a href="https://schoolsweek.co.uk/more-scrutiny-of-coursework-plans-to-protect-exams-from-ai/">英Ofqual、AI不正防止のためコースワーク評価への「より厳格な監視」を予告</a></h3>
+        <p class="summary">資格・試験規制機関のトップが発言。長文コースワークの廃止も「選択肢から排除しない」とした。正式な規則改正は未確定の段階。</p>
+      </li>
+      <li>
+        <div class="meta"><span class="src">PR TIMES</span><time>07-02</time><span class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+        <h3 class="title"><a href="https://prtimes.jp/main/html/rd/p/000000263.000024557.html">北九州市、AI型教材「キュビナ」を全市立小中学校・特別支援学校で正式採用</a></h3>
+        <p class="summary">7月から小1〜中3が利用開始。個別最適な学び・協働的な学びの充実が目的。企業プレスリリースベースの情報。</p>
+      </li>
+      <li>
+        <div class="meta"><span class="src">KJK</span><time>06-12</time><span class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span></div>
+        <h3 class="title"><a href="https://kjk.com/2026/06/12/ohios-july-1-2026-school-ai-policy-deadline-what-districts-educators-and-parents-need-to-know/">米オハイオ州、全公立校にAI利用ポリシー策定を義務化(7月1日期限到来)</a></h3>
+        <p class="summary">House Bill 96に基づき、州モデルポリシーの採用か独自策定が必要。AIツール導入の強制ではなく、プライバシー・いじめ・不正行為に関する規律を定めるもの。</p>
+      </li>
+      <li>
+        <div class="meta"><span class="src">EdTech Innovation Hub</span><time>06-30</time><span class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+        <h3 class="title"><a href="https://www.edtechinnovationhub.com/news/ai-use-outpaces-strategy-in-english-schools-new-teach-first-study-finds">英国: 学校のAI活用は先行、正式なAI戦略を持つ学校は2%のみ(Teach First×Accenture調査)</a></h3>
+        <p class="summary">ポリシー保有12%、教員研修実施20%にとどまり、学校リーダーの63%が教員のスキル・自信不足を障壁に挙げた。約200校の調査。</p>
+      </li>
+      <li>
+        <div class="meta"><span class="src">NSF</span><time>—</time><span class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+        <h3 class="title"><a href="https://www.nsf.gov/news/nsf-invests-11m-expand-ai-professional-development-k-12">米NSF、K-12教員へのAI専門研修拡大にCSTAへ1,100万ドルを助成</a></h3>
+        <p class="summary">「AI Professional Development Weeks」を複数州で展開し、2年間で約2,500〜3,000人の教員、最大60万人の生徒への波及を見込む。</p>
+      </li>
+      <li>
+        <div class="meta"><span class="src">Google公式</span><time>—</time><span class="dots"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></span></div>
+        <h3 class="title"><a href="https://blog.google/products-and-platforms/products/education/classroom-ai-features/">Google、Gemini for EducationとClassroomに新機能(Study Notebooks、Guided Learning等)</a></h3>
+        <p class="summary">教育機関向けに無償提供。The Princeton Reviewと提携した無償のGRE・ACT模擬試験も含む。正確な発表日は未特定。</p>
+      </li>
+      <li>
+        <div class="meta"><span class="src">こどもとIT</span><time>06-29</time><span class="dots"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+        <h3 class="title"><a href="https://edu.watch.impress.co.jp/docs/news/2120946.html">スタディポケット、児童向けにルビ・分かち書き表示「フレンドリービュー」を追加</a></h3>
+        <p class="summary">AI応答へのルビ表示と分かち書き表示を個人設定でき、小学校低学年の児童が使いやすいUIを目指す。</p>
+      </li>
+      <li>
+        <div class="meta"><span class="src">日経新聞</span><time>—</time><span class="dots"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+        <h3 class="title"><a href="https://www.nikkei.com/article/DGKKZO93093000Z01C25A2EA1000/">日本の大学、生成AIの不正利用・カンニング対策が課題に</a></h3>
+        <p class="summary">大学の6割が教育に生成AIを活用する一方、4割は慎重姿勢との調査報道。数値の一次出典は不明瞭で要検証。</p>
+      </li>
+      <li>
+        <div class="meta"><span class="src">CallSphere</span><time>—</time><span class="dots"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+        <h3 class="title"><a href="https://callsphere.ai/blog/ai-agents-education-khan-academy-duolingo-autonomous-tutoring">Khan AcademyとDuolingo、自律型AIチューターを合計5,000万人規模に展開との分析</a></h3>
+        <p class="summary">Khanmigo利用者は1年で4万人から70万人へ急増したとされるが、数値は企業側発表ベースで独立検証はない。</p>
+      </li>
+      <li>
+        <div class="meta"><span class="src">Class Central</span><time>—</time><span class="dots"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></div>
+        <h3 class="title"><a href="https://www.classcentral.com/report/chatgpt-on-duolingo-khan-academy/">Duolingo、AI会話練習「Video Call」を中間プラン「Super」にも拡大</a></h3>
+        <p class="summary">5万人参加のRCTで語学テストスコアが対照群より38%高かったとの企業側データも紹介。独立検証の有無は不明。</p>
+      </li>
+    </ol>
+  </section>
+
+  <details class="note">
+    <summary>収集メモ・情報の限界</summary>
+    <p>公開日「—」は正確な日付を特定できなかった記事。日本語まとめ系(eguweb・AI新聞・Qiita)は本文へアクセスできず検索スニペットに依拠しているため確度は低め。一面2件目の文科省の件は公開会議の二次報道に基づく。</p>
+  </details>
+
+  <footer class="colophon">code-newssaisin 日次収集 — Supabase news_items より生成 / 毎朝5時更新</footer>
+</div>

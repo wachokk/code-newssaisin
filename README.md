@@ -50,17 +50,23 @@ Claude Code のサブエージェント機能を使い、**Fable 5 / Opus / Sonn
 `/news-research`(レポート生成)とは別に、**毎朝5時(JST)にAI全般とAI×教育の最新ニュースを自動収集し、Supabaseに蓄積する**仕組みを持つ。
 
 ```
-定期トリガー(Claude Code Routines, 毎朝5:00 JST)
+定期トリガー(Claude Code Routines, 毎朝5:00 JST, プッシュ通知ON)
 │  新規クラウドセッションを起動し /daily-news-ingest を実行
 │
 ├─ news-scout × 2(Sonnet 5)…… 並列収集
 │     ├ AI全般(モデル・研究・業界・規制)      → category: ai_general
 │     └ AI×教育(EdTech・導入事例・教育政策)   → category: ai_education
 │
-└─ メインセッション …… 構造化して Supabase へ INSERT
-      ├ news_items(記事。url ユニーク制約で重複自動排除)
-      └ news_runs(実行ログ)
+├─ メインセッション …… 構造化して Supabase へ INSERT
+│     ├ news_items(記事。url ユニーク制約で重複自動排除)
+│     └ news_runs(実行ログ)
+│
+└─ スマホ配信
+      ├ 「AIニュース朝刊」Artifact を固定URLに再デプロイ(templates/daily-digest.html ベース)
+      └ Routine の完了プッシュ通知がスマホに届く → タップで実行結果とダイジェストを閲覧
 ```
+
+- **ダイジェスト固定URL**: https://claude.ai/code/artifact/81be40c8-187a-4009-ab94-72e690519bfd(スマホのホーム画面に追加しておくと毎朝同じURLで最新版が見られる)
 
 - **Supabase プロジェクト**: `rsykqkjcolptspzrpucx`(ap-northeast-1)
 - **スキーマ**: `supabase/migrations/20260705_create_news_tables.sql`(適用済み)
@@ -83,7 +89,8 @@ order by collected_date desc, importance desc;
 |---|---|
 | `.claude/agents/` | サブエージェント定義(scout / analyst / fact-checker) |
 | `.claude/commands/news-research.md` | 調査ワークフローを起動するスラッシュコマンド |
-| `.claude/commands/daily-news-ingest.md` | 日次収集→Supabase蓄積ワークフロー |
+| `.claude/commands/daily-news-ingest.md` | 日次収集→Supabase蓄積→スマホ配信ワークフロー |
+| `templates/daily-digest.html` | 「AIニュース朝刊」ダイジェストのデザインテンプレート |
 | `supabase/migrations/` | Supabaseスキーマの記録 |
 | `research/` | 収集・分析の中間成果物(調査ごとにサブディレクトリ) |
 | `reports/` | 最終レポート |
